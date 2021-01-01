@@ -29,6 +29,7 @@ jobs:
           ${{ runner.os }}-yarn-
     - name: Disallow robots
       run: |
+        touch public/robots.txt
         echo "User-agent: *" >> public/robots.txt
         echo "Disallow: /" >> public/robots.txt
     - name: install
