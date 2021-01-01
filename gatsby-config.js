@@ -11,6 +11,7 @@ const customQueries = {
 };
 
 module.exports = {
+  pathPrefix: '/bad-opendata-temple',
   siteMetadata: {
     title: SITE_NAME,
     siteName: SITE_NAME,
