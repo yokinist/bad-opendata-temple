@@ -8,8 +8,7 @@ import Omikuji from './omikuji';
 const BigBellContainer = styled.div<{ display: boolean }>`
   position: absolute;
   pointer-events: none;
-  display: ${(props) =>
-    props.display ? 'flex' : 'none !important'};
+  display: ${(props) => (props.display ? 'flex' : 'none')};
   justify-content: center;
   width: 100%;
   align-items: flex-end;
@@ -116,77 +115,81 @@ const BigBell = () => {
 
   return (
     <>
-      <BigBellContainer display></BigBellContainer>
-      <StickContainer>
-        <Rnd
-          style={style}
-          size={{
-            width: windowWidth / 12,
-            height: windowWidth / 12,
-          }}
-          position={{
-            x: windowWidth / 4 + windowWidth / 10,
-            y: ((windowWidth / 2) * (180 / 328)) / 2,
-          }}
-          dragAxis="x"
-          enableResizing={false}
-          onDrag={(_e, d) => {
-            if (d.x <= windowWidth / 3.5) {
-              if (isSeparated) {
-                try {
-                  if (!el.current.paused) {
-                    el.current.pause();
-                    el.current.currentTime = 0;
+      <BigBellContainer display>
+        <StickContainer>
+          <Rnd
+            style={style}
+            size={{
+              width: windowWidth / 12,
+              height: windowWidth / 12,
+            }}
+            position={{
+              x: windowWidth / 4 + windowWidth / 10,
+              y: ((windowWidth / 2) * (180 / 328)) / 2,
+            }}
+            dragAxis="x"
+            enableResizing={false}
+            onDrag={(_e, d) => {
+              if (d.x <= windowWidth / 3.5) {
+                if (isSeparated) {
+                  try {
+                    if (!el.current.paused) {
+                      el.current.pause();
+                      el.current.currentTime = 0;
+                    }
+                    el.current.volume =
+                      d.deltaX < -30 ? 1 : d.deltaX / -30;
+                    console.log(el.current.volume);
+                    el.current.play();
+                    windUp(false);
+                  } catch (e) {}
+                  setCount(count - 1);
+                  if (count <= 1) {
+                    openSpecialContent(true);
+                    setCount(BONNOU_COUNT);
+                    special.current.play();
                   }
-                  el.current.volume =
-                    d.deltaX < -30 ? 1 : d.deltaX / -30;
-                  console.log(el.current.volume);
-                  el.current.play();
-                  windUp(false);
-                } catch (e) {}
-                setCount(count - 1);
-                if (count <= 1) {
-                  openSpecialContent(true);
-                  setCount(BONNOU_COUNT);
-                  special.current.play();
+                  console.log('PLAY');
+                  separate(false);
                 }
-                console.log('PLAY');
-                separate(false);
+              } else {
+                separate(true);
+                openSpecialContent(false);
+                if (d.deltaX < -2) {
+                  windUp(true);
+                } else if (d.deltaX > 0) {
+                  windUp(false);
+                }
               }
-            } else {
-              separate(true);
-              openSpecialContent(false);
-              if (d.deltaX < -2) {
-                windUp(true);
-              } else if (d.deltaX > 0) {
-                windUp(false);
-              }
-            }
-          }}
-        >
-          <StickImg
-            ref={stick1Img}
-            display={!isWoundUp}
-            fluid={data.stick1.childImageSharp.fluid}
-            alt="鐘付き棒"
-          />
-          <StickImg
-            ref={stick2Img}
-            display={isWoundUp}
-            fluid={data.stick2.childImageSharp.fluid}
-            alt="振りかぶった鐘付き棒"
-          />
-        </Rnd>
-        <audio ref={el}>
-          <source src="/mp3/bell03.mp3" type="audio/mp3" />
-        </audio>
-        <audio ref={special}>
-          <source
-            src="/mp3/bonnou_taisan.mp3"
-            type="audio/mp3"
-          />
-        </audio>
-      </StickContainer>
+            }}
+          >
+            <StickImg
+              ref={stick1Img}
+              display={!isWoundUp}
+              fluid={data.stick1.childImageSharp.fluid}
+              alt="鐘付き棒"
+            />
+            <StickImg
+              ref={stick2Img}
+              display={isWoundUp}
+              fluid={data.stick2.childImageSharp.fluid}
+              alt="振りかぶった鐘付き棒"
+            />
+          </Rnd>
+          <audio ref={el}>
+            <source
+              src="/mp3/bell03.mp3"
+              type="audio/mp3"
+            />
+          </audio>
+          <audio ref={special}>
+            <source
+              src="/mp3/bonnou_taisan.mp3"
+              type="audio/mp3"
+            />
+          </audio>
+        </StickContainer>
+      </BigBellContainer>
       <BigBellContainer display>
         <div>
           <BigBellImg
