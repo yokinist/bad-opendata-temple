@@ -84,18 +84,17 @@ const isDayTime = currentTime.isBetween(
   times.night,
 );
 
-// const isLastDay = currentTime.isSame(
-//   moment().endOf('year'),
-//   'day',
-// );
+const isLastDay = currentTime.isSame(
+  moment().endOf('year'),
+  'day',
+);
 
-// const isSanganichi = currentTime.isBetween(
-//   moment().startOf('year').dayOfYear(0),
-//   moment().startOf('year').dayOfYear(4),
-// );
+const isSanganichi = currentTime.isBetween(
+  moment().startOf('year').dayOfYear(0),
+  moment().startOf('year').dayOfYear(4),
+);
 
-// TODO: 可変でもレイアウト崩れが起きないようにする
-const isActiveJyoyaMode = false; // isLastDay || isSanganichi;
+const isActiveJyoyaMode = isLastDay || isSanganichi;
 
 const Hero = () => {
   const data = useStaticQuery(
@@ -177,12 +176,12 @@ const Hero = () => {
           />
         </div>
       </LogoContainer>
-      {isActiveJyoyaMode ? (
-        <BigBell />
-      ) : (
-        <>
-          <Mochimaki />
-          <TempleContainer>
+      <>
+        {!isActiveJyoyaMode && <Mochimaki />}
+        <TempleContainer>
+          {isActiveJyoyaMode ? (
+            <BigBell />
+          ) : (
             <div>
               <TempleImg
                 fluid={
@@ -194,9 +193,9 @@ const Hero = () => {
                 alt="本堂"
               />
             </div>
-          </TempleContainer>
-        </>
-      )}
+          )}
+        </TempleContainer>
+      </>
       <ScaffoldContainer>
         <div>
           {isUnderConstruction && (
